@@ -89,6 +89,7 @@ func FirebaseAuthMiddleware(c *fiber.Ctx) error {
 
 	c.Locals("uid", token.UID)
 	c.Locals("email", token.Claims["email"])
+	c.Locals("name", token.Claims["name"])
 
 	return c.Next()
 }
