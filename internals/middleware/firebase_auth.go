@@ -13,14 +13,18 @@ import (
 	"google.golang.org/api/option"
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
     secretmanagerpb "cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
+	"github.com/joho/godotenv"
+
 )
 
 var firebaseAuthClient *auth.Client
 
 func InitFireBase() {
-	projectID := "71211314983" // Replace with your actual project ID
-	secretID := "BubbleVerseFirebaseJson" // Replace with your secret ID
-	versionID := "latest" // Or a specific version number like "1"
+	godotenv.Load()
+
+	projectID := os.Getenv("FIREBASE_PROJECT_ID")
+	secretID := os.Getenv("FIREBASE_SECRET_ID")
+	versionID := os.Getenv("FIREBASE_VERSION_ID")
 
 	ctx := context.Background()
 
@@ -89,6 +93,7 @@ func FirebaseAuthMiddleware(c *fiber.Ctx) error {
 
 	c.Locals("uid", token.UID)
 	c.Locals("email", token.Claims["email"])
+	c.Locals("name", token.Claims["name"])
 
 	return c.Next()
 }
